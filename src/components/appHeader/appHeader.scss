@@ -1,0 +1,28 @@
+@import '../../styles/style.scss';
+
+.app {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__title {
+    font-size: 28px;
+    span {
+      color: $main-color;
+    }
+  }
+  &__menu {
+    ul {
+      display: flex;
+      justify-content: space-between;
+      font-size: 28px;
+      li {
+        margin: 0 8px;
+        a:hover {
+          color: $main-color;
+        }
+      }
+    }
+  }
+}

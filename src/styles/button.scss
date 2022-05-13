@@ -1,0 +1,44 @@
+@import './variables.scss';
+
+.button {
+  width: 101px;
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 14px;
+  transition: 0.3s transform;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  &__long {
+    display: block;
+    width: 170px;
+    margin: 45px auto 0;
+  }
+  .inner {
+    background-color: $main-color;
+    line-height: 18px;
+    padding: 10px 18px;
+    transition: none;
+
+    border-top-left-radius: 50%;
+    border-bottom-right-radius: 50%;
+  }
+  &__main, 
+  &__secondary {
+    &:hover {
+      color: #fff;
+    }
+  }
+  &__secondary {
+    .inner {
+      background-color: $grey;
+    }
+  }
+  &:hover {
+    transform: translateY(-5px);
+  }
+  &:disabled {
+    filter: grayscale(.5);
+  }
+}
