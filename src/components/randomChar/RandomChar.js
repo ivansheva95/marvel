@@ -1,73 +1,36 @@
+import { useEffect, useState } from 'react'
+
 import mjolnir from '../../resources/img/mjolnir.png'
-import { MarvelService } from '../../services/MarvelService'
-import { Spinner } from '../spinner/Spinner'
-import { ErrorMessage } from '../errorMessage/ErrorMessage'
+import { useMarvelService } from '../../services/MarvelService'
+import setContent from '../../utils/setContent'
+
 
 import './randomChar.scss'
-import React from 'react'
 
 
-export class RandomChar extends React.Component {
-  constructor(props) {
-    super(props)
+export const RandomChar = () => {
+  
+  const [char, setChar] = useState({})
 
-    this.state = {
-      char: {},
-      loading: true,
-      error: false
-     }
+  const { process, setProcess, getCharacter } = useMarvelService()
 
-     console.log('constructor')
-  }
+  useEffect(() => updateChar(), [])
 
-  componentDidMount() {
-    console.log('mount')
-    this.updateChar()
-  }
-
-  onCharLoaded = (char) => {
-    this.setState({
-      char, 
-      loading: false
-    })
-  }
-
-  onCharLoading = () => {
-    this.setState({
-      loading: true
-    })
-  }
-
-  onError = () => {
-    this.setState({
-      loading: false,
-      error: true
-    })
-  }
-
-  marvelService = new MarvelService()
-
-  updateChar = () => {
-    console.log('update')
+  const updateChar = () => {
     const id = Math.floor(Math.random() * (1011400 - 1011000 + 1) + 1011000);
-    this.onCharLoading()
-    this.marvelService
-        .getCharacter(id)
-        .then(this.onCharLoaded)
-        .catch(this.onError)
+
+    getCharacter(id)
+      .then(char => setChar(char))
+      .then(() => setProcess('success'))
   }
-
-  render() {
-    console.log('render')
-    const {char, loading, error} = this.state
-
-    const spinner = loading ? <Spinner /> : null
-    const errorMessage = error ? <ErrorMessage /> : null
-    const content = !(spinner || errorMessage) ? <View char={char}/> : null
+  
+    // const spinner = loading ? <Spinner /> : null
+    // const errorMessage = error ? <ErrorMessage /> : null
+    // const content = !(spinner || errorMessage) ? <View char={char}/> : null
 
     return (
       <div className="randomchar">
-       { spinner || errorMessage || content }
+       { setContent(process, View, char) }
         <div className="randomchar__static">
           <p className="randomchar__title">
             Random character for today!<br/>
@@ -77,20 +40,19 @@ export class RandomChar extends React.Component {
             Or choose another one
           </p>
           <button className="button button__main">
-            <div onClick={this.updateChar} className="inner">try it</div>
+            <div onClick={updateChar} className="inner">try it</div>
           </button>
           <img src={mjolnir} alt="mjolnir" className="randomchar__decoration" />
         </div>
       </div>
     )
-  }
-
 }
 
-const View = ({ char }) => {
-  const {name, descrition, thumbnail, homepage, wiki} = char
 
-  const noPicture = thumbnail.match(/image_not_available.jpg$/)
+const View = ({ data }) => {
+  const {name, descrition, thumbnail, homepage, wiki} = data
+
+  const noPicture = toString(thumbnail).search(/image_not_available.jpg$/)
 
   return (
     <div className="randomchar__block">
